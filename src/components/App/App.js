@@ -2,19 +2,23 @@ import { useState, useEffect} from "react";
 import From from "../Form/Form";
 import ContactList from "../ContactList/ContactList";
 import Filter from "../Filter/Filter";
+import { useSelector, useDispatch } from 'react-redux';
+import { setContact, removeContact } from "../../store/reducer";
 import s from './App.module.css';
 
 
 function App() {
-    const [contacts, setContacts] = useState(
+    const filterValue = useSelector((state) => state.contactsSlice.filter);
+    const contacts = useSelector((state) => state.contactsSlice.contacts.items);
+    const dispatch = useDispatch();
+    
+/*     const [contacts, setContacts] = useState(
         () => JSON.parse(window.localStorage.getItem('contacts')) ?? [],
-    );
+    ); */
 
-    const [filter, setFilter] = useState("");
-
-    useEffect(() => {
+/*     useEffect(() => {
         window.localStorage.setItem('contacts', JSON.stringify(contacts));
-    }, [contacts]);
+    }, [contacts]); */
 
     const handleSubmit = data => {
         let findName = contacts.find(item => item.name === data.name); 
@@ -22,29 +26,9 @@ function App() {
         if (findName) { 
             return alert(`${data.name} is already in contact`)
         } else { 
-            setContacts(contact => ([...contact, data]));
+            dispatch(setContact(data))
         };
     };
-
-    const handleFilter = (e) => {
-        setFilter(e.target.value);
-    };
-
-    const handleClickDeleteBtn = (id) => {
-        setContacts(prevState => prevState.filter(contact => contact.id !== id));
-    };
-
-    const getVisibleContacts = () => {
-        const filterTolowerCase = filter.toLowerCase();
-
-        return contacts.filter(
-            contact => contact.name.toLowerCase().includes(filterTolowerCase)
-        );
-    };
-
-    let visibleContacts = [];
-    visibleContacts = getVisibleContacts();
-
 
     return (
         <div className={s.container}>
@@ -54,15 +38,9 @@ function App() {
             />
 
             <h2>Contacts</h2>
-            <Filter
-                value={filter}
-                onChange={handleFilter}
-            />
+            <Filter/>
 
-            <ContactList
-                contacts={visibleContacts}
-                onDeleteClick={handleClickDeleteBtn}
-            />
+            <ContactList/>
         </div>
     );
 };
