@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import {  useDispatch } from 'react-redux';
 import {  removeContact } from "../../store/reducer";
 import s from "./ContactItem.module.css";
@@ -16,5 +17,9 @@ const ContactItem = ({ item }) => {
         </li>
     );
 };
+
+ContactItem.prototype = { 
+    item: PropTypes.object,
+}
 
 export default ContactItem;

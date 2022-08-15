@@ -1,5 +1,7 @@
 import {useState} from "react";
 import { nanoid } from 'nanoid';
+import { useSelector, useDispatch } from 'react-redux';
+import { setContact } from "../../store/reducer";
 import s from './Form.module.css';
 
 
@@ -7,10 +9,12 @@ let inputNameId = nanoid();
 let inputTelId = nanoid();
 
 
-function Form({onSubmit}) {
+function Form() {
     const [name, setName] = useState("");
     const [number, setNumber] = useState("");
     const [id, setId] = useState("");
+    const contacts = useSelector((state) => state.contactsSlice.contacts.items);
+    const dispatch = useDispatch();
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -22,12 +26,18 @@ function Form({onSubmit}) {
             return (setNumber(value));
         };
     };
-
-    const handleSubmit = (e) => {
+    
+    const handleSubmit = e => {
         e.preventDefault();
-        let contactsData = { name, number, id };
+        let data = { name, number, id };
+        let findName = contacts.find(item => item.name.toLowerCase() === data.name.toLowerCase()); 
 
-        onSubmit(contactsData);
+        if (findName) { 
+            return alert(`${data.name} is already in contact`)
+        } else { 
+            dispatch(setContact(data))
+        };
+
         reset();
     };
 
