@@ -6,7 +6,7 @@ import s from "./ContactItem.module.css";
 
 const ContactItem = ({ item }) => {
     const dispatch = useDispatch();
-
+    console.log(item)
     return (
         <li className={s.item}>
             {item.name} : {item.number}
@@ -18,8 +18,14 @@ const ContactItem = ({ item }) => {
     );
 };
 
+
 ContactItem.prototype = { 
-    item: PropTypes.object,
+    item: PropTypes.shape({
+        name: PropTypes.string,
+        number: PropTypes.string,
+        id: PropTypes.id,
+    }),
+    
 }
 
 export default ContactItem;
